@@ -13,7 +13,7 @@
 }
 
 .node text {
-  font: 10px sans-serif;
+  font: 10px Optima;
 }
 
 .link {
@@ -24,12 +24,15 @@
 
 </style>
 <body>
+    <div id = "viz">
+    </div>
 <script src="//d3js.org/d3.v3.min.js"></script>
+<script src="js/jquery.js"></script>
 <script>
 
-var margin = {top: 20, right: 120, bottom: 20, left: 120},
-    width = 960 - margin.right - margin.left,
-    height = 800 - margin.top - margin.bottom;
+var margin = {top: 5, right: 120, bottom: 5, left: 120},
+    width  = parseInt(d3.select("#viz").style("width").slice(0, -2)),
+    height = $(window).height() - 15;
 
 var i = 0,
     duration = 750,
@@ -92,9 +95,9 @@ function update(source) {
       .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
   nodeEnter.append("text")
-      .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+      .attr("x", function(d) { return d.children || d._children ? 8 : 8; })
       .attr("dy", ".35em")
-      .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+      .attr("text-anchor", function(d) { return d.children || d._children ? "start" : "start"; })
       .text(function(d) { return d.name; })
       .style("fill-opacity", 1e-6);
 
