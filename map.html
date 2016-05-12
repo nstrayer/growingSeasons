@@ -35,7 +35,7 @@
 }
 
 .node text {
-  font: 10px Optima;
+  font: 1.2em Optima;
 }
 
 .link {
@@ -46,15 +46,14 @@
 
 </style>
 <body>
-    <div id = "viz">
-    </div>
+    <div id = "viz"></div>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script src="js/jquery.js"></script>
+<script src="stateList.js"></script>
 <script>
 
-var margin = {top: 5, right: 120, bottom: 5, left: 120},
-    width  = parseInt(d3.select("#viz").style("width").slice(0, -2)),
+var width  = parseInt(d3.select("#viz").style("width").slice(0, -2)),
     height = $(window).height() - 15,
     centered;
 
@@ -111,11 +110,13 @@ function clicked(d) {
   var x, y, k;
 
   if (d && centered !== d) {
-    drawTree() //Draw the tree viz.
+    //   console.log(d.id)
+    //   console.log(stateKeys[d.id])
+    drawTree(stateKeys[d.id]) //Draw the tree viz.
     var centroid = path.centroid(d);
     x = centroid[0];
     y = centroid[1];
-    k = 7;
+    k = 8;
     centered = d;
   } else {
       d3.select(".treeViz").remove()
@@ -137,13 +138,15 @@ function clicked(d) {
 //------------------------------------------------------------------------------
 // Code for the tree viz.
 
-function drawTree(){
+function drawTree(state){
     var i = 0,
         duration = 750,
-        root;
+        root,
+        treeHeight = height * 0.9,
+        margin = {top: (height - treeHeight)/2, right: 240, bottom: 5, left: width/4, padding: 20};
 
     var tree = d3.layout.tree()
-        .size([height, width]);
+        .size([treeHeight, width]);
 
     var diagonal = d3.svg.diagonal()
         .projection(function(d) { return [d.y, d.x]; });
@@ -152,10 +155,26 @@ function drawTree(){
         .attr("class", "treeViz")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.json("seasonData_d3.json", function(error, flare) {
+    //draw background rectangle to display viz on.
+    svg.append("rect")
+        .attr("id", "background_rectangle")
+        .attr("rx", 40)
+        .attr("ry", 40)
+        .attr("y", -margin.padding/2)
+        .attr("x", -margin.padding/2)
+        .attr("width", width/2 + margin.padding)
+        .attr("height", treeHeight + margin.padding)
+        .attr("fill", "steelblue")
+        .attr("fill-opacity", 0.5)
+
+    d3.json("seasonData_d3.json", function(error, grow_data) {
       if (error) throw error;
 
-      root = flare;
+      //filter the data to the selected state:
+      grow_data.children.forEach(function(d){       //scroll through the children vector
+          if(d.name == state){ root = d }
+      })
+
       root.x0 = height / 2;
       root.y0 = 0;
 
@@ -170,8 +189,6 @@ function drawTree(){
       root.children.forEach(collapse);
       update(root);
     });
-
-    d3.select(self.frameElement).style("height", "800px");
 
     function update(source) {
 
@@ -272,12 +289,5 @@ function drawTree(){
       update(d);
     }
 }
-
-
-
-
-
-
-
 
 </script>
