@@ -55,7 +55,9 @@
 
 var width  = parseInt(d3.select("#viz").style("width").slice(0, -2)),
     height = $(window).height() - 15,
-    active = d3.select(null);
+    active = d3.select(null),
+    treeHeight = height * 0.9,
+    margin = {top: (height - treeHeight)/2, right: 240, bottom: 5, left: width/4, padding: 20};;
 
     var projection = d3.geo.albersUsa()
         .scale(1000)
@@ -120,7 +122,10 @@ function clicked(d) {
   if (active.node() === this) return reset();
   active.classed("active", false);
   active = d3.select(this).classed("active", true);
-  drawTree(stateKeys[d.id])
+
+  dateSelector()
+  // drawTree(stateKeys[d.id])
+
   var bounds = path.bounds(d),
       dx = bounds[1][0] - bounds[0][0],
       dy = bounds[1][1] - bounds[0][1],
@@ -190,6 +195,155 @@ feMerge.append("feMergeNode")
     .attr("in", "offsetBlur")
 feMerge.append("feMergeNode")
     .attr("in", "SourceGraphic");
+
+
+//------------------------------------------------------------------------------
+// Time selector code
+
+function dateSelector(){
+    var radius = Math.min(width, height) / 4,
+        thickness = radius * 0.4;
+
+    var color_scale = d3.scale.linear()
+        .domain([0, 12])
+        .range(['lightsteelblue', 'green']);
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius + thickness*0.73)
+        .innerRadius(radius );
+
+    var time = d3.svg.arc()
+        .outerRadius(radius + 2*thickness)
+        .innerRadius(radius + thickness)
+        .cornerRadius(5);
+
+    var pie = d3.layout.pie()
+        .startAngle(-90 * Math.PI/180)
+        .endAngle(-90 * Math.PI/180 + 2*Math.PI)
+        .padAngle(0.005)
+        .sort(null)
+        .value(function(d) { return 1; });
+
+    var dateChooser = svg.append("g")
+        .attr("id", "dateChooser")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    function drawDates(dates){
+        var months = ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+        var g = dateChooser.selectAll(".months")
+              .data(pie(months))
+            .enter().append("g")
+              .attr("class", "months")
+
+          //draw background rectangle to display viz on.
+          svg.append("rect")
+              .attr("id", "background_rectangle")
+            //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            //   .attr("rx", 40)
+            //   .attr("ry", 40)
+            //   .attr("y", -margin.padding/2)
+            //   .attr("x", -margin.padding/2)
+              .attr("width", width)
+              .attr("height", height)
+              .attr("fill", "lightgrey")
+              .attr("fill-opacity", 0.5)
+            //   .style("filter", "url(#drop-shadow)")
+
+        //Create the donut slices and also the invisible arcs for the text
+        g.append("path")
+        	.attr("class", "donutArcSlices")
+        	.attr("d", arc)
+        	.style("fill", "white")
+            .style("fill-opacity", 0)
+            .attr("id", function(d,i) { return "arc_"+i; }) //Give each slice a unique ID
+        	.each(function(d,i) {
+        		//A regular expression that captures all in between the start of a string (denoted by ^)
+        		//and the first capital letter L
+        		var firstArcSection = /(^.+?)L/;
+
+        		//The [1] gives back the expression between the () (thus not the L as well)
+        		//which is exactly the arc statement
+        		var newArc = firstArcSection.exec( d3.select(this).attr("d") )[1];
+        		//Replace all the comma's so that IE can handle it -_-
+        		//The g after the / is a modifier that "find all matches rather than stopping after the first match"
+        		newArc = newArc.replace(/,/g , " ");
+
+                //If the end angle lies beyond a quarter of a circle (90 degrees or pi/2)
+                //flip the end and start position
+                if (d.endAngle >= 100 * Math.PI/180) {
+                    var startLoc 	= /M(.*?)A/,		//Everything between the capital M and first capital A
+                        middleLoc 	= /A(.*?)0 0 1/,	//Everything between the capital A and 0 0 1
+                        endLoc 		= /0 0 1 (.*?)$/;	//Everything between the 0 0 1 and the end of the string (denoted by $)
+                    //Flip the direction of the arc by switching the start and end point (and sweep flag)
+                    var newStart  = endLoc.exec( newArc )[1];
+                    var newEnd    = startLoc.exec( newArc )[1];
+                    var middleSec = middleLoc.exec( newArc )[1];
+
+                    //Build up the new arc notation, set the sweep-flag to 0
+                    newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
+                }//if
+
+        		//Create a new invisible arc that the text can flow along
+        		svg.append("path")
+        			.attr("class", "hiddenDonutArcs")
+        			.attr("id", "donutArc"+i)
+        			.attr("d", newArc)
+        			.style("fill", "none");
+        	});
+
+        //Append the label names on the outside
+        g.append("text")
+            .attr("class", "donutText")
+            .attr("dy", function(d,i) { return (d.endAngle > 100 * Math.PI/180 ? 10 : 0); })
+            .append("textPath")
+            .attr("startOffset","50%")
+            .style("text-anchor","middle")
+            .attr("xlink:href",function(d,i){return "#donutArc"+i;})
+            .text(function(d){return d.data;});
+
+        //draw the part that shows early and late.
+        var g = dateChooser.selectAll(".times")
+              .data(pie(dates))
+            .enter().append("g")
+              .attr("class", "times")
+              .on("mouseover", moused)
+              .on("mouseout", unmoused)
+              .on("click", clicked);
+
+        g.append("path")
+          .attr("d", time)
+          .style("fill",  function(d,i){return i < 12 ? color_scale(i) : color_scale(12 - (i - 12))})
+
+        g.append("text")
+          .attr("transform", function(d) { return "translate(" + time.centroid(d) + ")"; })
+          .attr("dy", ".35em")
+          .attr("text-anchor", "middle")
+          .text(function(d,i) {return i%2 == 0 ? "early" : "late";});
+    }
+
+    function moused(d){
+        console.log(d)
+        d3.select(this).select("path")
+            .attr("stroke-width", "4")
+            .attr("stroke", "black")
+    }
+
+    function unmoused(d){
+        console.log(d)
+        d3.select(this).select("path")
+            .attr("stroke-width", "0")
+    }
+
+    function clicked(d){
+        alert("You have selected the time period of " + d.data)
+    }
+
+    d3.json("seasonData_d3.json", function(data){
+        var times = data.children[1].children.map(function(d){return d.name})
+        drawDates(times)
+    })
+}
 
 
 
