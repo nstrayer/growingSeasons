@@ -160,42 +160,6 @@ function stopped() {
   if (d3.event.defaultPrevented) d3.event.stopPropagation();
 }
 
-//------------------------------------------------------------------------------
-// Code for drop shadow
-// filters go in defs element
-var defs = svg.append("defs");
-
-// create filter with id #drop-shadow
-// height=130% so that the shadow is not clipped
-var filter = defs.append("filter")
-    .attr("id", "drop-shadow")
-    .attr("height", "130%");
-
-// SourceAlpha refers to opacity of graphic that this filter will be applied to
-// convolve that with a Gaussian with standard deviation 3 and store result
-// in blur
-filter.append("feGaussianBlur")
-    .attr("in", "SourceAlpha")
-    .attr("stdDeviation", 5)
-    .attr("result", "blur");
-
-// translate output of Gaussian blur to the right and downwards with 2px
-// store result in offsetBlur
-filter.append("feOffset")
-    .attr("in", "blur")
-    .attr("dx", 5)
-    .attr("dy", 5)
-    .attr("result", "offsetBlur");
-
-// overlay original SourceGraphic over translated blurred opacity by using
-// feMerge filter. Order of specifying inputs is important!
-var feMerge = filter.append("feMerge");
-
-feMerge.append("feMergeNode")
-    .attr("in", "offsetBlur")
-feMerge.append("feMergeNode")
-    .attr("in", "SourceGraphic");
-
 
 //------------------------------------------------------------------------------
 // Time selector code
@@ -224,6 +188,15 @@ function dateSelector(){
         .sort(null)
         .value(function(d) { return 1; });
 
+    //draw background rectangle to display viz on.
+    svg.append("rect")
+        .attr("id", "background_rectangle")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("fill", "lightgrey")
+        .attr("fill-opacity", 0.5)
+        .on("click", cancel)
+
     var dateChooser = svg.append("g")
         .attr("id", "dateChooser")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
@@ -235,20 +208,6 @@ function dateSelector(){
               .data(pie(months))
             .enter().append("g")
               .attr("class", "months")
-
-          //draw background rectangle to display viz on.
-          svg.append("rect")
-              .attr("id", "background_rectangle")
-            //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            //   .attr("rx", 40)
-            //   .attr("ry", 40)
-            //   .attr("y", -margin.padding/2)
-            //   .attr("x", -margin.padding/2)
-              .attr("width", width)
-              .attr("height", height)
-              .attr("fill", "lightgrey")
-              .attr("fill-opacity", 0.5)
-            //   .style("filter", "url(#drop-shadow)")
 
         //Create the donut slices and also the invisible arcs for the text
         g.append("path")
@@ -339,6 +298,11 @@ function dateSelector(){
         alert("You have selected the time period of " + d.data)
     }
 
+    function cancel(d){
+        dateChooser.remove()
+        d3.select("#background_rectangle").remove()
+    }
+
     d3.json("seasonData_d3.json", function(data){
         var times = data.children[1].children.map(function(d){return d.name})
         drawDates(times)
@@ -370,15 +334,10 @@ function drawTree(state){
     //draw background rectangle to display viz on.
     svg.append("rect")
         .attr("id", "background_rectangle")
-        .attr("rx", 40)
-        .attr("ry", 40)
-        .attr("y", -margin.padding/2)
-        .attr("x", -margin.padding/2)
-        .attr("width", width/2 + margin.padding)
-        .attr("height", treeHeight + margin.padding)
+        .attr("width", width)
+        .attr("height", height)
         .attr("fill", "lightgrey")
         .attr("fill-opacity", 0.5)
-        .style("filter", "url(#drop-shadow)")
 
     d3.json("seasonData_d3.json", function(error, grow_data) {
       if (error) throw error;
