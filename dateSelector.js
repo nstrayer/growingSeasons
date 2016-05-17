@@ -143,12 +143,18 @@ function dateSelector(){
     }
 
     function clicked(d){
-        alert("You have selected the time period of " + d.data)
+        d3.json("data/seasonalData.json", function(data){
+            //grab the data we need.
+            console.log(data[currentState][d.data])
+            drawInSeason(data[currentState][d.data])
+        })
     }
 
     function cancel(d){
         d3.selectAll(".dateChooser").remove()
         d3.select("#background_rectangle").remove()
+        d3.selectAll(".results").remove()
+        d3.select("#results").classed("hidden", "true")
         reset()
     }
 

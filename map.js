@@ -59,7 +59,7 @@ function clicked(d) {
 if (active.node() === this) return reset();
 active.classed("active", false);
 active = d3.select(this).classed("active", true);
-
+currentState = stateKeys[d.id]
 dateSelector()
 // drawTree(stateKeys[d.id])
 
@@ -78,6 +78,7 @@ svg.transition()
 
 function reset() {
 d3.select(".treeViz").remove()
+d3.select(".inSeasonViz").remove()
 active.classed("active", false);
 active = d3.select(null);
 
