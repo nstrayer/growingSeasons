@@ -44,6 +44,14 @@
   stroke-width: 1.5px;
 }
 
+#month_arcs {
+    pointer-events: none !important;
+}
+
+.months {
+    pointer-events: none !important;
+}
+
 </style>
 <body>
     <div id = "viz"></div>
@@ -166,11 +174,6 @@ function zoomed() {
 function stopped() {
   if (d3.event.defaultPrevented) d3.event.stopPropagation();
 }
-
-
-
-
-
 
 //------------------------------------------------------------------------------
 // Code for the tree viz.

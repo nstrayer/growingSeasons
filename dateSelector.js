@@ -24,7 +24,7 @@ function dateSelector(){
     var pie = d3.layout.pie()
         .startAngle(-90 * Math.PI/180)
         .endAngle(-90 * Math.PI/180 + 2*Math.PI)
-        .padAngle(0.005)
+        .padAngle(0.01)
         .sort(null)
         .value(function(d) { return 1; });
 
@@ -37,21 +37,25 @@ function dateSelector(){
         .attr("fill-opacity", 0.5)
         .on("click", cancel)
 
-    var dateChooser = svg.append("g")
-        .attr("id", "dateChooser")
+    var month_arcs = svg.append("g")
+        .attr("id", "month_arcs")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var time_arcs = svg.append("g")
+        .attr("id", "time_arcs")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     function drawDates(times, months){
-        // var months = ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-        var g = dateChooser.selectAll(".months")
+        //first we draw arcs for the months.
+        var monthArc = month_arcs.selectAll(".months")
               .data(pie(months))
             .enter().append("g")
               .attr("class", "months")
 
         //Create the donut slices and also the invisible arcs for the text
-        g.append("path")
-        	.attr("class", "donutArcSlices")
+        monthArc.append("path")
+        	.attr("class", "monthArcs")
         	.attr("d", arc)
             .style("fill",  function(d,i){return i < 6 ? color_scale(i) : color_scale(6 - (i - 6))})
             .style("fill-opacity", 0.8)
@@ -60,7 +64,7 @@ function dateSelector(){
         		var firstArcSection = /(^.+?)L/;
 
         		var newArc = firstArcSection.exec( d3.select(this).attr("d") )[1];
-        		newArc = newArc.replace(/,/g , " ");
+        		newArc     = newArc.replace(/,/g , " ");
 
                 //If the end angle lies beyond a quarter of a circle (90 degrees or pi/2)
                 //flip the end and start position
@@ -72,24 +76,21 @@ function dateSelector(){
                     var newStart  = endLoc.exec( newArc )[1];
                     var newEnd    = startLoc.exec( newArc )[1];
                     var middleSec = middleLoc.exec( newArc )[1];
-
                     //Build up the new arc notation, set the sweep-flag to 0
                     newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
                 }
 
         		//Create a new invisible arc that the text can flow along
-        		svg.append("path")
-        			.attr("class", "hiddenDonutArcs")
+        		monthArc.append("path")
+        			.attr("class", "monthArcs")
         			.attr("id", "donutArc"+i)
         			.attr("d", newArc)
         			.style("fill", "none")
-                    .on("clicked", null)
-                    .on("mouseover", null)
-                    .on("mouseout", null)
+                    .style("pointer-events", "none !imporatant;")
         	});
 
         //Append the label names on the outside
-        g.append("text")
+        monthArc.append("text")
             .attr("class", "donutText")
             .attr("dy", function(d,i) { return (d.endAngle > 100 * Math.PI/180 ? 12 : -2); })
             .append("textPath")
@@ -97,23 +98,24 @@ function dateSelector(){
             .style("text-anchor","middle")
             .attr("font-size", 20)
             .attr("xlink:href",function(d,i){return "#donutArc"+i;})
-            .text(function(d){return d.data;});
+            .text(function(d){return d.data;})
 
         //draw the part that shows early and late.
-        var g2 = g.selectAll(".times")
+        var timeArc = time_arcs.selectAll(".times")
               .data(pie(times))
             .enter().append("g")
-              .attr("class", "times")
+              .attr("class", "time_arcs")
               .moveToFront()
               .on("mouseover", moused)
               .on("mouseout", unmoused)
               .on("click", clicked);
 
-        g2.append("path")
+        timeArc.append("path")
           .attr("d", time)
-         .style("fill", "none")
+         .style("fill", "steelblue")
+         .style("fill-opacity", 0)
 
-        g2.append("text")
+        timeArc.append("text")
           .attr("transform", function(d) { return "translate(" + time.centroid(d) + ")"; })
           .attr("dy", ".35em")
           .attr("text-anchor", "middle")
