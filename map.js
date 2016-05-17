@@ -3,6 +3,7 @@ var projection = d3.geo.albersUsa()
     .translate([width / 2, height / 2]);
 
 var start_scale = isMobile? 0.5 : 1;
+var reset_zoom = isMobile? [94.5040054321289, 175.3100128173828] : [0,0]
 
 var zoom = d3.behavior.zoom()
     .translate([0, 0])
@@ -88,7 +89,7 @@ function reset() {
 
     svg.transition()
       .duration(750)
-      .call(zoom.translate([0, 0]).scale(start_scale).event);
+      .call(zoom.translate(reset_zoom).scale(start_scale).event);
 }
 
 function zoomed() {
@@ -98,7 +99,7 @@ function zoomed() {
 }
 
 if(isMobile){
-    svg.call(zoom.translate([94.5040054321289, 175.3100128173828]).scale(start_scale).event);
+    svg.call(zoom.translate(reset_zoom).scale(start_scale).event);
 }
 
 
