@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:8000/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+
+.node {
+  cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px Optima;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+</style>
+</head><body>
+    <div id="viz">
+    </div>
+<script src="./localhost_files/d3.v3.min.js"></script>
+<script src="./localhost_files/jquery.js"></script>
+<script>
+
+var margin = {top: 5, right: 120, bottom: 5, left: 120},
+    width  = parseInt(d3.select("#viz").style("width").slice(0, -2)),
+    height = $(window).height() - 15;
+
+var i = 0,
+    duration = 750,
+    root;
+
+var tree = d3.layout.tree()
+    .size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.right + margin.left)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.json("seasonData_d3.json", function(error, flare) {
+  if (error) throw error;
+
+  root = flare;
+  root.x0 = height / 2;
+  root.y0 = 0;
+
+  function collapse(d) {
+    if (d.children) {
+      d._children = d.children;
+      d._children.forEach(collapse);
+      d.children = null;
+    }
+  }
+
+  root.children.forEach(collapse);
+  update(root);
+});
+
+d3.select(self.frameElement).style("height", "800px");
+
+function update(source) {
+
+  // Compute the new tree layout.
+  var nodes = tree.nodes(root).reverse(),
+      links = tree.links(nodes);
+
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d) { d.y = d.depth * 180; });
+
+  // Update the nodes…
+  var node = svg.selectAll("g.node")
+      .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+  // Enter any new nodes at the parent's previous position.
+  var nodeEnter = node.enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+      .on("click", click);
+
+  nodeEnter.append("circle")
+      .attr("r", 1e-6)
+      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+  nodeEnter.append("text")
+      .attr("x", function(d) { return d.children || d._children ? 8 : 8; })
+      .attr("dy", ".35em")
+      .attr("text-anchor", function(d) { return d.children || d._children ? "start" : "start"; })
+      .text(function(d) { return d.name; })
+      .style("fill-opacity", 1e-6);
+
+  // Transition nodes to their new position.
+  var nodeUpdate = node.transition()
+      .duration(duration)
+      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+  nodeUpdate.select("circle")
+      .attr("r", 4.5)
+      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+  nodeUpdate.select("text")
+      .style("fill-opacity", 1);
+
+  // Transition exiting nodes to the parent's new position.
+  var nodeExit = node.exit().transition()
+      .duration(duration)
+      .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+      .remove();
+
+  nodeExit.select("circle")
+      .attr("r", 1e-6);
+
+  nodeExit.select("text")
+      .style("fill-opacity", 1e-6);
+
+  // Update the links…
+  var link = svg.selectAll("path.link")
+      .data(links, function(d) { return d.target.id; });
+
+  // Enter any new links at the parent's previous position.
+  link.enter().insert("path", "g")
+      .attr("class", "link")
+      .attr("d", function(d) {
+        var o = {x: source.x0, y: source.y0};
+        return diagonal({source: o, target: o});
+      });
+
+  // Transition links to their new position.
+  link.transition()
+      .duration(duration)
+      .attr("d", diagonal);
+
+  // Transition exiting nodes to the parent's new position.
+  link.exit().transition()
+      .duration(duration)
+      .attr("d", function(d) {
+        var o = {x: source.x, y: source.y};
+        return diagonal({source: o, target: o});
+      })
+      .remove();
+
+  // Stash the old positions for transition.
+  nodes.forEach(function(d) {
+    d.x0 = d.x;
+    d.y0 = d.y;
+  });
+}
+
+// Toggle children on click.
+function click(d) {
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+  update(d);
+}
+
+</script><svg width="1660" height="777"><g transform="translate(120,5)"><path class="link" d="M0,383.5C90,383.5 90,7.67 180,7.67"></path><path class="link" d="M0,383.5C90,383.5 90,23.009999999999998 180,23.009999999999998"></path><path class="link" d="M0,383.5C90,383.5 90,38.35 180,38.35"></path><path class="link" d="M0,383.5C90,383.5 90,53.69 180,53.69"></path><path class="link" d="M0,383.5C90,383.5 90,69.03 180,69.03"></path><path class="link" d="M0,383.5C90,383.5 90,84.37 180,84.37"></path><path class="link" d="M0,383.5C90,383.5 90,99.71 180,99.71"></path><path class="link" d="M0,383.5C90,383.5 90,115.05 180,115.05"></path><path class="link" d="M0,383.5C90,383.5 90,130.39 180,130.39"></path><path class="link" d="M0,383.5C90,383.5 90,145.73 180,145.73"></path><path class="link" d="M0,383.5C90,383.5 90,161.07 180,161.07"></path><path class="link" d="M0,383.5C90,383.5 90,176.41 180,176.41"></path><path class="link" d="M0,383.5C90,383.5 90,191.75 180,191.75"></path><path class="link" d="M0,383.5C90,383.5 90,207.09 180,207.09"></path><path class="link" d="M0,383.5C90,383.5 90,222.43 180,222.43"></path><path class="link" d="M0,383.5C90,383.5 90,237.77 180,237.77"></path><path class="link" d="M0,383.5C90,383.5 90,253.10999999999999 180,253.10999999999999"></path><path class="link" d="M0,383.5C90,383.5 90,268.45 180,268.45"></path><path class="link" d="M0,383.5C90,383.5 90,283.79 180,283.79"></path><path class="link" d="M0,383.5C90,383.5 90,299.13 180,299.13"></path><path class="link" d="M0,383.5C90,383.5 90,314.46999999999997 180,314.46999999999997"></path><path class="link" d="M0,383.5C90,383.5 90,329.81 180,329.81"></path><path class="link" d="M0,383.5C90,383.5 90,345.15 180,345.15"></path><path class="link" d="M0,383.5C90,383.5 90,360.49 180,360.49"></path><path class="link" d="M0,383.5C90,383.5 90,375.83 180,375.83"></path><path class="link" d="M0,383.5C90,383.5 90,391.17 180,391.17"></path><path class="link" d="M0,383.5C90,383.5 90,406.51 180,406.51"></path><path class="link" d="M0,383.5C90,383.5 90,421.85 180,421.85"></path><path class="link" d="M0,383.5C90,383.5 90,437.19 180,437.19"></path><path class="link" d="M0,383.5C90,383.5 90,452.53 180,452.53"></path><path class="link" d="M0,383.5C90,383.5 90,467.87 180,467.87"></path><path class="link" d="M0,383.5C90,383.5 90,483.21 180,483.21"></path><path class="link" d="M0,383.5C90,383.5 90,498.55 180,498.55"></path><path class="link" d="M0,383.5C90,383.5 90,513.89 180,513.89"></path><path class="link" d="M0,383.5C90,383.5 90,529.23 180,529.23"></path><path class="link" d="M0,383.5C90,383.5 90,544.57 180,544.57"></path><path class="link" d="M0,383.5C90,383.5 90,559.91 180,559.91"></path><path class="link" d="M0,383.5C90,383.5 90,575.25 180,575.25"></path><path class="link" d="M0,383.5C90,383.5 90,590.59 180,590.59"></path><path class="link" d="M0,383.5C90,383.5 90,605.93 180,605.93"></path><path class="link" d="M0,383.5C90,383.5 90,621.27 180,621.27"></path><path class="link" d="M0,383.5C90,383.5 90,636.61 180,636.61"></path><path class="link" d="M0,383.5C90,383.5 90,651.95 180,651.95"></path><path class="link" d="M0,383.5C90,383.5 90,667.29 180,667.29"></path><path class="link" d="M0,383.5C90,383.5 90,682.63 180,682.63"></path><path class="link" d="M0,383.5C90,383.5 90,697.97 180,697.97"></path><path class="link" d="M0,383.5C90,383.5 90,713.31 180,713.31"></path><path class="link" d="M0,383.5C90,383.5 90,728.65 180,728.65"></path><path class="link" d="M0,383.5C90,383.5 90,743.99 180,743.99"></path><path class="link" d="M0,383.5C90,383.5 90,759.33 180,759.33"></path><g class="node" transform="translate(180,759.3300170898438)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Wyoming</text></g><g class="node" transform="translate(180,743.989990234375)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Wisconsin</text></g><g class="node" transform="translate(180,728.6500244140625)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">West Virginia</text></g><g class="node" transform="translate(180,713.3099975585938)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Washington</text></g><g class="node" transform="translate(180,697.969970703125)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Virginia</text></g><g class="node" transform="translate(180,682.6300048828125)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Vermont</text></g><g class="node" transform="translate(180,667.2899780273438)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Utah</text></g><g class="node" transform="translate(180,651.9500122070312)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Texas</text></g><g class="node" transform="translate(180,636.6099853515625)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Tennessee</text></g><g class="node" transform="translate(180,621.27001953125)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">South Dakota</text></g><g class="node" transform="translate(180,605.9299926757812)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">South Carolina</text></g><g class="node" transform="translate(180,590.5900268554688)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Rhode Island</text></g><g class="node" transform="translate(180,575.25)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Pennsylvania</text></g><g class="node" transform="translate(180,559.9099731445312)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Oregon</text></g><g class="node" transform="translate(180,544.5700073242188)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Oklahoma</text></g><g class="node" transform="translate(180,529.22998046875)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Ohio</text></g><g class="node" transform="translate(180,513.8900146484375)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">North Dakota</text></g><g class="node" transform="translate(180,498.54998779296875)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">North Carolina</text></g><g class="node" transform="translate(180,483.2099914550781)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">New York</text></g><g class="node" transform="translate(180,467.8699951171875)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">New Mexico</text></g><g class="node" transform="translate(180,452.5299987792969)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">New Jersey</text></g><g class="node" transform="translate(180,437.19000244140625)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">New Hampshire</text></g><g class="node" transform="translate(180,421.8500061035156)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Nevada</text></g><g class="node" transform="translate(180,406.510009765625)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Nebraska</text></g><g class="node" transform="translate(180,391.1700134277344)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Montana</text></g><g class="node" transform="translate(180,375.8299865722656)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Missouri</text></g><g class="node" transform="translate(180,360.489990234375)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Mississippi</text></g><g class="node" transform="translate(180,345.1499938964844)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Minnesota</text></g><g class="node" transform="translate(180,329.80999755859375)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Michigan</text></g><g class="node" transform="translate(180,314.4700012207031)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Massachusetts</text></g><g class="node" transform="translate(180,299.1300048828125)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Maryland</text></g><g class="node" transform="translate(180,283.7900085449219)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Maine</text></g><g class="node" transform="translate(180,268.45001220703125)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Louisiana</text></g><g class="node" transform="translate(180,253.11000061035156)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Kentucky</text></g><g class="node" transform="translate(180,237.77000427246094)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Kansas</text></g><g class="node" transform="translate(180,222.42999267578125)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Iowa</text></g><g class="node" transform="translate(180,207.08999633789062)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Indiana</text></g><g class="node" transform="translate(180,191.75)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Illinois</text></g><g class="node" transform="translate(180,176.41000366210938)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Idaho</text></g><g class="node" transform="translate(180,161.07000732421875)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Hawaii</text></g><g class="node" transform="translate(180,145.72999572753906)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Georgia</text></g><g class="node" transform="translate(180,130.38999938964844)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Florida</text></g><g class="node" transform="translate(180,115.05000305175781)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Delaware</text></g><g class="node" transform="translate(180,99.70999908447266)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Connecticut</text></g><g class="node" transform="translate(180,84.37000274658203)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Colorado</text></g><g class="node" transform="translate(180,69.02999877929688)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">California</text></g><g class="node" transform="translate(180,53.689998626708984)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Arkansas</text></g><g class="node" transform="translate(180,38.349998474121094)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Arizona</text></g><g class="node" transform="translate(180,23.010000228881836)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Alaska</text></g><g class="node" transform="translate(180,7.670000076293945)"><circle r="4.5" style="fill: rgb(176, 196, 222);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">Alabama</text></g><g class="node" transform="translate(0,383.5)"><circle r="4.5" style="fill: rgb(255, 255, 255);"></circle><text x="8" dy=".35em" text-anchor="start" style="fill-opacity: 1;">State</text></g></g></svg>
+</body></html>
