@@ -79,7 +79,7 @@ function drawInSeason(data){
     //update header text
     d3.select("#background_text")
         .transition().duration(500)
-        .attr("font-size", "1.8em")
+        .attr("font-size", isMobile? "1.8em": "4em")
         .each("end", function(){
             d3.select(this).text(currentState + " in " + currentTime)
         })
