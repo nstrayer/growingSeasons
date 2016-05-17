@@ -2,10 +2,12 @@ var projection = d3.geo.albersUsa()
     .scale(1000)
     .translate([width / 2, height / 2]);
 
+var start_scale = isMobile? 0.5 : 1;
+
 var zoom = d3.behavior.zoom()
     .translate([0, 0])
-    .scale(1)
-    .scaleExtent([0.5, 8])
+    .scale(start_scale)
+    .scaleExtent([start_scale, 8])
     .on("zoom", zoomed);
 
 var path = d3.geo.path()

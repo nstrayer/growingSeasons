@@ -35,6 +35,7 @@
 
 
 <script>
+var isMobile = /iphone|ipod|ipad|android|blackberry|opera mini|opera mobi|skyfire|maemo|windows phone|palm|iemobile|symbian|symbianos|fennec/i.test(navigator.userAgent.toLowerCase());
 
 var width  = parseInt(d3.select("#viz").style("width").slice(0, -2)),
     height = $(window).height() - 15,
