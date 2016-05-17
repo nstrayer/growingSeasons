@@ -79,19 +79,19 @@ svg.transition()
 }
 
 function reset() {
-d3.select(".treeViz").remove()
-d3.select(".inSeasonViz").remove()
-active.classed("active", false);
-active = d3.select(null);
+    d3.select(".treeViz").remove()
+    d3.select(".inSeasonViz").remove()
+    active.classed("active", false);
+    active = d3.select(null);
 
-svg.transition()
-  .duration(750)
-  .call(zoom.translate([0, 0]).scale(1).event);
+    svg.transition()
+      .duration(750)
+      .call(zoom.translate([0, 0]).scale(1).event);
 }
 
 function zoomed() {
-g.style("stroke-width", 1.5 / d3.event.scale + "px");
-g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    g.style("stroke-width", 1.5 / d3.event.scale + "px");
+    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
 // If the drag behavior prevents the default click,
