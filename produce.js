@@ -73,7 +73,7 @@ function drawInSeason(data){
             .text("")
             .transition().delay(function(d,i){return i*50}).duration(250)
             .text(function(d){return d.name})
-            .each("end", function(d,i){if (i == veggies.length - 1){drawFruits()}}) //wait till veggies are done to draw fruits
+            // .each("end", function(d,i){if (i == veggies.length - 1){drawFruits()}}) //wait till veggies are done to draw fruits
     }
 
     function drawFruits(){
@@ -92,7 +92,7 @@ function drawInSeason(data){
             .text("")
             .transition().delay(function(d,i){return i*50}).duration(250)
             .text(function(d){return d.name})
-            .each("end", function(d,i){if (i == fruits.length - 1){drawHerbs()}})
+            // .each("end", function(d,i){if (i == fruits.length - 1){drawHerbs()}})
     }
 
     function drawHerbs(){
@@ -113,5 +113,7 @@ function drawInSeason(data){
     }
 
     drawVeggies() //kick it off.
+    drawFruits()
+    drawHerbs()
     d3.selectAll(".dateChooser").remove()
 }
