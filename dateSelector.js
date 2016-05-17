@@ -10,8 +10,11 @@ function dateSelector(){
         thickness = radius * 0.4;
 
     var color_scale = d3.scale.linear()
-        .domain([0, 6])
-        .range(['#a6cee3', '#33a02c']);
+        .domain([0,1,2,3,4,5])
+        .range(['rgb(237,248,251)','rgb(204,236,230)','rgb(153,216,201)','rgb(102,194,164)','rgb(65,174,118)','rgb(35,139,69)']);
+
+        // .domain([0, 6])
+        // .range(['#a6cee3', '#33a02c']);
 
     var startArc = d3.svg.arc()
         .outerRadius(radius + thickness)
@@ -38,7 +41,7 @@ function dateSelector(){
         .attr("width", width)
         .attr("height", height)
         .attr("fill", "lightgrey")
-        .attr("fill-opacity", 0.5)
+        .attr("fill-opacity", 0)
         .on("click", cancel)
 
     svg.append("text") //draw the name of the current state in upper left.
