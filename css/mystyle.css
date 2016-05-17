@@ -67,10 +67,10 @@ h1 {
   position: absolute;
   left: 0;
   right: 0;
+  top: 5em;
   border-radius: 25px;
   padding:20px;
 }
-
 
 .hidden {
   display: none;

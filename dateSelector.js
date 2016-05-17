@@ -48,7 +48,7 @@ function dateSelector(){
         .attr("x", margin.padding)
         .attr("y", margin.padding*2.3)
         .text(currentState)
-        .attr("font-size", 45)
+        .attr("font-size", "2.5em")
         .attr("font-anchor", "start")
         .attr("font-family", "Optima")
         .transition().duration(900)
@@ -162,8 +162,9 @@ function dateSelector(){
     function clicked(d){
         d3.json("data/seasonalData.json", function(data){
             //grab the data we need.
-            console.log(data[currentState][d.data])
-            drawInSeason(data[currentState][d.data])
+            currentTime = d.data; //update time.
+            console.log(data[currentState][currentTime])
+            drawInSeason(data[currentState][currentTime])
         })
     }
 
