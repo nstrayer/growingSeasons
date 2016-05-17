@@ -51,13 +51,11 @@ g.append("path")
 });
 
 function hovered(d){
-d3.select(this)
-    .attr("fill", "steelblue")
+    d3.select(this).classed("active", true)
 }
 
 function un_hovered(d){
-d3.select(this)
-    .attr("fill", "#aaa")
+    if(zooming){d3.select(this).classed("active", false)} //dont unselect if zoomed. 
 }
 
 function clicked(d) {
@@ -69,7 +67,7 @@ function clicked(d) {
     currentState = stateKeys[d.id]
     dateSelector()
 
-    d3.select("#header").classed("hidden", true) //hide the title.
+    d3.select("#intro").classed("hidden", true) //hide the title.
 
     var bounds = path.bounds(d),
       dx = bounds[1][0] - bounds[0][0],
@@ -82,7 +80,9 @@ function clicked(d) {
     svg.transition()
       .duration(750)
       .call(zoom.translate(translate).scale(scale).event)
-      .each("end", function(d){zooming = false});
+      .each("end", function(d){
+          d3.select()
+          zooming = false});
 }
 
 function reset() {
@@ -92,7 +92,7 @@ function reset() {
     d3.select("#background_text").transition()
         .attr("y", -margin.padding)
         .each("end", function(d){
-            d3.select("#header").classed("hidden", false)
+            d3.select("#intro").classed("hidden", false)
         })
         .remove()
 

@@ -2,22 +2,36 @@ body {
     font-family: Optima;
 }
 
-h1 {
+#title {
     padding-left: 10px;
     color: rgb(106, 104, 104);
     font-size: 4em;
+	float: left;
 }
+
+#instructions {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+
+#instructions span {
+    float: right;
+    font-size: 2em;
+    padding: 1em;
+}
+
 .background {
   fill: none;
   pointer-events: all;
 }
 
 #states {
-  fill: #aaa;
+  fill: #d9d9d9;
 }
 
 #states .active {
-  fill: lightsteelblue;
+  fill: #ff7f00;
 }
 
 #state-borders {
@@ -68,7 +82,7 @@ h1 {
   position: absolute;
   left: 0;
   right: 0;
-  top: 5em;
+  top: 5.5em;
   border-radius: 25px;
   padding:20px;
 }

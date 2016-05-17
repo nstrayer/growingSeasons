@@ -11,7 +11,7 @@ function dateSelector(){
 
     var color_scale = d3.scale.linear()
         .domain([0, 6])
-        .range(['lightsteelblue', 'green']);
+        .range(['#a6cee3', '#33a02c']);
 
     var startArc = d3.svg.arc()
         .outerRadius(radius + thickness)
@@ -43,7 +43,7 @@ function dateSelector(){
 
     svg.append("text") //draw the name of the current state in upper left.
         .attr("id", "background_text")
-        .attr("fill", "rgb(106, 104, 104)")
+        .attr("fill", "rgb(68, 67, 67)")
         .attr("fill-opacity", 0)
         .attr("x", margin.padding*0.9)
         .attr("y", -margin.padding)
