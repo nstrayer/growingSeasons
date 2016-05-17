@@ -2,16 +2,10 @@ var projection = d3.geo.albersUsa()
     .scale(1000)
     .translate([width / 2, height / 2]);
 
-var margin = {top: 10, left: 10, bottom: 10, right: 10}
-  , width = parseInt(d3.select('#viz').style('width'))
-  , width = width - margin.left - margin.right
-  , mapRatio = .5
-  , height = width * mapRatio;
-
 var zoom = d3.behavior.zoom()
     .translate([0, 0])
     .scale(1)
-    .scaleExtent([1, 8])
+    .scaleExtent([0.5, 8])
     .on("zoom", zoomed);
 
 var path = d3.geo.path()
