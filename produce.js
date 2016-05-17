@@ -71,7 +71,7 @@ function drawInSeason(data){
             .append("p")
             .attr("class", "results")
             .text("")
-            .transition().delay(function(d,i){return i*50}).duration(500)
+            .transition().delay(function(d,i){return i*50}).duration(250)
             .text(function(d){return d.name})
             .each("end", function(d,i){if (i == veggies.length - 1){drawFruits()}}) //wait till veggies are done to draw fruits
     }
@@ -90,7 +90,7 @@ function drawInSeason(data){
             .append("p")
             .attr("class", "results")
             .text("")
-            .transition().delay(function(d,i){return i*50}).duration(500)
+            .transition().delay(function(d,i){return i*50}).duration(250)
             .text(function(d){return d.name})
             .each("end", function(d,i){if (i == fruits.length - 1){drawHerbs()}})
     }
@@ -108,7 +108,7 @@ function drawInSeason(data){
             .append("p")
             .attr("class", "results")
             .text("")
-            .transition().delay(function(d,i){return i*50}).duration(500)
+            .transition().delay(function(d,i){return i*50}).duration(250)
             .text(function(d){return d.name})
     }
 
