@@ -94,11 +94,12 @@ function reset() {
 function zoomed() {
     g.style("stroke-width", 1.5 / d3.event.scale + "px");
     g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    console.log(d3.event.translate)
 }
 
 if(isMobile){
     g.style("stroke-width", 1.5 / 0.5 + "px");
-    g.attr("transform", "translate(" + 0 + ")scale(" + 0.5 + ")");
+    g.attr("transform", "translate( 0,0)scale(" + 0.5 + ")");
 }
 
 
