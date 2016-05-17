@@ -68,9 +68,8 @@ function clicked(d) {
     active = d3.select(this).classed("active", true);
     currentState = stateKeys[d.id]
     dateSelector()
-    //hide the title.
-    d3.select("#header").classed("hidden", true)
-    // drawTree(stateKeys[d.id])
+
+    d3.select("#header").classed("hidden", true) //hide the title.
 
     var bounds = path.bounds(d),
       dx = bounds[1][0] - bounds[0][0],
@@ -82,10 +81,12 @@ function clicked(d) {
 
     svg.transition()
       .duration(750)
-      .call(zoom.translate(translate).scale(scale).event);
+      .call(zoom.translate(translate).scale(scale).event)
+      .each("end", function(d){zooming = false});
 }
 
 function reset() {
+    zooming = true //enable zooming/panning
     d3.select(".treeViz").remove()
     d3.select(".inSeasonViz").remove()
     d3.select("#background_text").remove()
@@ -100,17 +101,18 @@ function reset() {
 }
 
 function zoomed() {
-    g.style("stroke-width", 1.5 / d3.event.scale + "px");
-    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    if(zooming){ //be able to turn off zooming when it is not wanted (i.e. non map views.)
+        g.style("stroke-width", 1.5 / d3.event.scale + "px");
+        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
 }
 
-if(isMobile){
+if(isMobile){ //center the mobile map.
     svg.call(zoom.translate(reset_zoom).scale(start_scale).event);
 }
-
 
 // If the drag behavior prevents the default click,
 // also stop propagation so we don’t click-to-zoom.
 function stopped() {
-if (d3.event.defaultPrevented) d3.event.stopPropagation();
+    if (d3.event.defaultPrevented) d3.event.stopPropagation();
 }
