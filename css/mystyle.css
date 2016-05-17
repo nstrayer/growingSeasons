@@ -48,3 +48,30 @@
 .months {
     pointer-events: none !important;
 }
+
+#results {
+  border-style: none;
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 70%;
+  margin: 0 auto;
+  box-shadow: 10px 10px 5px #888888;
+  font-family: optima;
+  z-index: 999;
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-radius: 25px;
+  padding:20px;
+}
+
+
+.hidden {
+  display: none;
+}
+
+svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
