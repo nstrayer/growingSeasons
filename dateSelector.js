@@ -9,17 +9,17 @@ function dateSelector(){
         .domain([0, 6])
         .range(['lightsteelblue', 'green']);
 
+    var startArc = d3.svg.arc()
+        .outerRadius(radius + thickness)
+        .innerRadius(radius + thickness - 0.001)
+
     var arc = d3.svg.arc()
         .outerRadius(radius + thickness)
         .innerRadius(radius )
-        // .cornerRadius(2);
 
     var time = d3.svg.arc()
-        // .outerRadius(radius + 2*thickness)
-        // .innerRadius(radius + thickness)
         .outerRadius(radius + thickness)
         .innerRadius(radius )
-        // .cornerRadius(5);
 
     var pie = d3.layout.pie()
         .startAngle(-90 * Math.PI/180)
@@ -38,10 +38,12 @@ function dateSelector(){
         .on("click", cancel)
 
     var month_arcs = svg.append("g")
+        .attr("class", "dateChooser")
         .attr("id", "month_arcs")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     var time_arcs = svg.append("g")
+        .attr("class", "dateChooser")
         .attr("id", "time_arcs")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
@@ -56,10 +58,12 @@ function dateSelector(){
         //Create the donut slices and also the invisible arcs for the text
         monthArc.append("path")
         	.attr("class", "monthArcs")
-        	.attr("d", arc)
+        	.attr("d", startArc)
             .style("fill",  function(d,i){return i < 6 ? color_scale(i) : color_scale(6 - (i - 6))})
             .style("fill-opacity", 0.8)
             .attr("id", function(d,i) { return "arc_"+i; }) //Give each slice a unique ID
+            .transition().duration(700)
+            .attr("d", arc)
         	.each(function(d,i) {
         		var firstArcSection = /(^.+?)L/;
 
@@ -99,6 +103,9 @@ function dateSelector(){
             .attr("font-size", 20)
             .attr("xlink:href",function(d,i){return "#donutArc"+i;})
             .text(function(d){return d.data;})
+            .attr("fill-opacity", 0)
+            .transition().duration(700)
+            .attr("fill-opacity", 1)
 
         //draw the part that shows early and late.
         var timeArc = time_arcs.selectAll(".times")
@@ -118,18 +125,19 @@ function dateSelector(){
           .attr("transform", function(d) { return "translate(" + time.centroid(d) + ")"; })
           .attr("dy", ".35em")
           .attr("text-anchor", "middle")
-          .text(function(d,i) {return i%2 == 0 ? "early" : "late";});
+          .text(function(d,i) {return i%2 == 0 ? "early" : "late";})
+          .attr("fill-opacity", 0)
+          .transition().duration(700)
+          .attr("fill-opacity", 1)
     }
 
     function moused(d){
-        // console.log(d.data.split(' ')[1])
         d3.select(this).select("path")
             .attr("stroke-width", "4")
             .attr("stroke", "black")
     }
 
     function unmoused(d){
-        // console.log(d)
         d3.select(this).select("path")
             .attr("stroke-width", "0")
     }
@@ -139,7 +147,7 @@ function dateSelector(){
     }
 
     function cancel(d){
-        dateChooser.remove()
+        d3.selectAll(".dateChooser").remove()
         d3.select("#background_rectangle").remove()
         reset()
     }
@@ -151,7 +159,6 @@ function dateSelector(){
         for (var i = 0; i < 12; i++){
             months.push(data.children[1].children[i*2].name.split(' ')[1])
         }
-        console.log(months)
         drawDates(times, months)
     })
 }
