@@ -26,8 +26,8 @@ function drawInSeason(data){
                 .append("p")
                 .attr("class", "results")
                 .text("No veggies in season.")
-            drawFruits()
         }
+        
         d3.select("#veggie_res").selectAll(".results")
             .data(veggies).enter()
             .append("p")
@@ -43,7 +43,6 @@ function drawInSeason(data){
                 .append("p")
                 .attr("class", "results")
                 .text("No fruits in season.")
-            drawHerbs()
         }
 
         d3.select("#fruit_res").selectAll(".results")
