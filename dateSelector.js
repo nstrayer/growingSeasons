@@ -100,7 +100,7 @@ function dateSelector(){
         //Append the label names on the outside
         monthArc.append("text")
             .attr("class", "donutText")
-            .attr("dy", function(d,i) { return (d.endAngle > 100 * Math.PI/180 ? 12 : -2); })
+            .attr("dy", function(d,i) { return (d.endAngle > 100 * Math.PI/180 ? 18 : -2); })
             .append("textPath")
             .attr("startOffset","50%")
             .style("text-anchor","middle")
