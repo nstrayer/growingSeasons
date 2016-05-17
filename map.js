@@ -24,7 +24,9 @@ svg.append("rect")
 
 var g = svg.append("g");
 
-svg.call(zoom.event);
+svg
+    .call(zoom) // delete this line to disable free zooming
+    .call(zoom.event);
 
 d3.json("data/us.json", function(error, us) {
 if (error) throw error;
