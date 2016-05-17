@@ -1,4 +1,11 @@
+body {
+    font-family: Optima;
+}
 
+h1 {
+    padding-left: 10px;
+    color: rgb(106, 104, 104);
+}
 .background {
   fill: none;
   pointer-events: all;
@@ -74,6 +81,7 @@ svg {
   top: 0;
   left: 0;
   right: 0;
+  cursor: default;
 }
 
 p { margin:0 }

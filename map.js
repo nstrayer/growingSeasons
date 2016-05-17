@@ -61,29 +61,36 @@ d3.select(this)
 }
 
 function clicked(d) {
-if (active.node() === this) return reset();
-active.classed("active", false);
-active = d3.select(this).classed("active", true);
-currentState = stateKeys[d.id]
-dateSelector()
-// drawTree(stateKeys[d.id])
 
-var bounds = path.bounds(d),
-  dx = bounds[1][0] - bounds[0][0],
-  dy = bounds[1][1] - bounds[0][1],
-  x = (bounds[0][0] + bounds[1][0]) / 2,
-  y = (bounds[0][1] + bounds[1][1]) / 2,
-  scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
-  translate = [width / 2 - scale * x, height / 2 - scale * y];
 
-svg.transition()
-  .duration(750)
-  .call(zoom.translate(translate).scale(scale).event);
+    if (active.node() === this) return reset();
+    active.classed("active", false);
+    active = d3.select(this).classed("active", true);
+    currentState = stateKeys[d.id]
+    dateSelector()
+    //hide the title.
+    d3.select("#header").classed("hidden", true)
+    // drawTree(stateKeys[d.id])
+
+    var bounds = path.bounds(d),
+      dx = bounds[1][0] - bounds[0][0],
+      dy = bounds[1][1] - bounds[0][1],
+      x = (bounds[0][0] + bounds[1][0]) / 2,
+      y = (bounds[0][1] + bounds[1][1]) / 2,
+      scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
+      translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+    svg.transition()
+      .duration(750)
+      .call(zoom.translate(translate).scale(scale).event);
 }
 
 function reset() {
     d3.select(".treeViz").remove()
     d3.select(".inSeasonViz").remove()
+    d3.select("#background_text").remove()
+    d3.select("#header").classed("hidden", false)
+
     active.classed("active", false);
     active = d3.select(null);
 
@@ -95,7 +102,6 @@ function reset() {
 function zoomed() {
     g.style("stroke-width", 1.5 / d3.event.scale + "px");
     g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    console.log(d3.event.translate)
 }
 
 if(isMobile){

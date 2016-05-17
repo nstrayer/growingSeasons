@@ -41,6 +41,19 @@ function dateSelector(){
         .attr("fill-opacity", 0.5)
         .on("click", cancel)
 
+    svg.append("text") //draw the name of the current state in upper left.
+        .attr("id", "background_text")
+        .attr("fill", "rgb(106, 104, 104)")
+        .attr("fill-opacity", 0)
+        .attr("x", margin.padding)
+        .attr("y", margin.padding*2.3)
+        .text(currentState)
+        .attr("font-size", 45)
+        .attr("font-anchor", "start")
+        .attr("font-family", "Optima")
+        .transition().duration(900)
+        .attr("fill-opacity", 1)
+
     var month_arcs = svg.append("g")
         .attr("class", "dateChooser")
         .attr("id", "month_arcs")
@@ -104,7 +117,7 @@ function dateSelector(){
             .append("textPath")
             .attr("startOffset","50%")
             .style("text-anchor","middle")
-            .attr("font-size", "1.5em")
+            .attr("font-size", isMobile? "1.5em": "2em")
             .attr("xlink:href",function(d,i){return "#donutArc"+i;})
             .text(function(d){return stateAbrevs[d.data];})
             .attr("fill-opacity", 0)
