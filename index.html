@@ -41,7 +41,7 @@
 var isMobile = /iphone|ipod|ipad|android|blackberry|opera mini|opera mobi|skyfire|maemo|windows phone|palm|iemobile|symbian|symbianos|fennec/i.test(navigator.userAgent.toLowerCase());
 
 var width  = parseInt(d3.select("#viz").style("width").slice(0, -2)),
-    height = $(window).height() - 15,
+    height = $(window).height(),
     active = d3.select(null),
     treeHeight = height * 0.9,
     margin = {top: (height - treeHeight)/2, right: 240, bottom: 5, left: width/4, padding: 20},
