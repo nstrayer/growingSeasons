@@ -96,6 +96,12 @@ function zoomed() {
     g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
+if(isMobile){
+    g.style("stroke-width", 1.5 / 0.5 + "px");
+    g.attr("transform", "translate(" + 0 + ")scale(" + 0.5 + ")");
+}
+
+
 // If the drag behavior prevents the default click,
 // also stop propagation so we don’t click-to-zoom.
 function stopped() {
