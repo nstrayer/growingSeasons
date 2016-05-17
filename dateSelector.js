@@ -105,7 +105,6 @@ function dateSelector(){
               .data(pie(times))
             .enter().append("g")
               .attr("class", "time_arcs")
-              .moveToFront()
               .on("mouseover", moused)
               .on("mouseout", unmoused)
               .on("click", clicked);
@@ -145,7 +144,7 @@ function dateSelector(){
         reset()
     }
 
-    d3.json("seasonData_d3.json", function(data){
+    d3.json("data/seasonData_d3.json", function(data){
         var times = data.children[1].children.map(function(d){return d.name})
         //loop every other value to skip repeates
         var months = []
