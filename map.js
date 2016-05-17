@@ -41,12 +41,12 @@ g.append("g")
   .attr("d", path)
   .on("click", clicked)
   .on("mouseover",hovered)
-  .on("mouseout", un_hovered);
+  .on("mouseout", un_hovered)
 
 g.append("path")
   .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
   .attr("id", "state-borders")
-  .attr("d", path);
+  .attr("d", path)
 });
 
 function hovered(d){
@@ -88,7 +88,7 @@ function reset() {
 
     svg.transition()
       .duration(750)
-      .call(zoom.translate([0, 0]).scale(1).event);
+      .call(zoom.translate([0, 0]).scale(start_scale).event);
 }
 
 function zoomed() {
@@ -98,8 +98,7 @@ function zoomed() {
 }
 
 if(isMobile){
-    g.style("stroke-width", 1.5 / 0.5 + "px");
-    g.attr("transform", "translate( 0,0)scale(" + 0.5 + ")");
+    svg.call(zoom.translate([94.5040054321289, 175.3100128173828]).scale(start_scale).event);
 }
 
 
