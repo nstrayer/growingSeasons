@@ -1,5 +1,9 @@
 //------------------------------------------------------------------------------
 // Time selector code
+//quick json to shorten state names
+var stateAbrevs = {"January": "Jan", "February": "Feb", "March": "Mar",
+"April": "Apr", "May": "May", "June": "Jun", "July": "Jul", "August": "Aug",
+"September": "Sept", "October":"Oct", "November": "Nov", "December": "Dec"}
 
 function dateSelector(){
     var radius = Math.min(width, height) / 3.5,
@@ -100,9 +104,9 @@ function dateSelector(){
             .append("textPath")
             .attr("startOffset","50%")
             .style("text-anchor","middle")
-            .attr("font-size", "1.2em")
+            .attr("font-size", "1.5em")
             .attr("xlink:href",function(d,i){return "#donutArc"+i;})
-            .text(function(d){return d.data;})
+            .text(function(d){return stateAbrevs[d.data];})
             .attr("fill-opacity", 0)
             .transition().duration(700)
             .attr("fill-opacity", 1)
