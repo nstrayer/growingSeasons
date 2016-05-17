@@ -5,6 +5,7 @@ body {
 h1 {
     padding-left: 10px;
     color: rgb(106, 104, 104);
+    font-size: 4em;
 }
 .background {
   fill: none;

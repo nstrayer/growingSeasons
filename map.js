@@ -89,8 +89,12 @@ function reset() {
     zooming = true //enable zooming/panning
     d3.select(".treeViz").remove()
     d3.select(".inSeasonViz").remove()
-    d3.select("#background_text").remove()
-    d3.select("#header").classed("hidden", false)
+    d3.select("#background_text").transition()
+        .attr("y", -margin.padding)
+        .each("end", function(d){
+            d3.select("#header").classed("hidden", false)
+        })
+        .remove()
 
     active.classed("active", false);
     active = d3.select(null);

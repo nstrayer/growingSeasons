@@ -27,7 +27,7 @@ function drawInSeason(data){
                 .attr("class", "results")
                 .text("No veggies in season.")
         }
-        
+
         d3.select("#veggie_res").selectAll(".results")
             .data(veggies).enter()
             .append("p")
@@ -79,10 +79,7 @@ function drawInSeason(data){
     d3.select("#background_text")
         .transition().duration(500)
         .attr("font-size", isMobile? "1.8em": "4em")
-        .each("end", function(){
-            d3.select(this).text(currentState + " in " + currentTime)
-        })
-
+        .text(currentState + " in " + currentTime)
 
     d3.selectAll(".dateChooser").remove()
 }
