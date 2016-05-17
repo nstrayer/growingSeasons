@@ -100,7 +100,7 @@ function dateSelector(){
             .append("textPath")
             .attr("startOffset","50%")
             .style("text-anchor","middle")
-            .attr("font-size", "1.5em")
+            .attr("font-size", "1.2em")
             .attr("xlink:href",function(d,i){return "#donutArc"+i;})
             .text(function(d){return d.data;})
             .attr("fill-opacity", 0)
