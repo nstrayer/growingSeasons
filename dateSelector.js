@@ -13,9 +13,6 @@ function dateSelector(){
         .domain([0,1,2,3,4,5])
         .range(['rgb(237,248,251)','rgb(204,236,230)','rgb(153,216,201)','rgb(102,194,164)','rgb(65,174,118)','rgb(35,139,69)']);
 
-        // .domain([0, 6])
-        // .range(['#a6cee3', '#33a02c']);
-
     var startArc = d3.svg.arc()
         .outerRadius(radius + thickness)
         .innerRadius(radius + thickness - 0.001)
@@ -44,13 +41,15 @@ function dateSelector(){
         .attr("fill-opacity", 0)
         .on("click", cancel)
 
-    svg.append("text") //draw the name of the current state in upper left.
+    svg.selectAll("#background_text")
+        .data([currentState]).enter()
+        .append("text") //draw the name of the current state in upper left.
         .attr("id", "background_text")
         .attr("fill", "rgb(68, 67, 67)")
         .attr("fill-opacity", 0)
         .attr("x", margin.padding*0.9)
         .attr("y", -margin.padding)
-        .text(currentState)
+        .text(function(d){return d})
         .attr("font-size", "4em")
         .attr("font-anchor", "start")
         .attr("font-family", "Optima")
