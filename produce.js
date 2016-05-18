@@ -105,6 +105,7 @@ function drawInSeason(data){
               win.focus();
             }
             OpenInNewTab(url)
+            d3.select(this).classed("hovered", false)
         })
 
     //clear selections on click
@@ -112,6 +113,7 @@ function drawInSeason(data){
         .on("click", function(){
             selected = [] //clear selected list
             d3.selectAll(".results").style("font-weight", "normal")
+            d3.select(this).classed("hovered", false)
         })
 
     //back button
@@ -125,6 +127,7 @@ function drawInSeason(data){
                 .transition().duration(900)
                 .text(currentState)
             svg.select("#background_rectangle").remove() //remove hidden background rectangle
+            d3.select(this).classed("hovered", false)
         })
         .on("mouseover", buttonHover)
         .on("mouseout", buttonUnHover)
