@@ -87,6 +87,9 @@ body {
   padding:20px;
 }
 
+.results {
+    cursor: pointer;
+}
 .hidden {
   display: none;
 }
