@@ -94,14 +94,15 @@ function drawInSeason(data){
     //code for recipe button
     d3.select("#recipeButton")
         .on("click", function(){
-            var url = "http://allrecipes.com/search/results/?ingincl="
+            var url = "http://allrecipes.com/search/results/?wt="
+            // var url = "http://allrecipes.com/search/results/?ingincl=" //use this one if ingredient search is needed.
             selected.forEach(function(ingredient, i){
                 ingredient = ingredient.replace(/[/(,.\))]/g, ""); //gets rid of parenthesis and commas
                 ingredient = ingredient.replace(/ /g, "%20");
                 url = url.concat(i == 0? ingredient: ",%20" + ingredient)
             })
             url = url.concat("&sort=re")
-            
+
             function OpenInNewTab(url) {
               var win = window.open(url, '_blank');
               win.focus();
