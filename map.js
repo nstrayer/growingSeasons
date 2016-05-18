@@ -55,11 +55,10 @@ function hovered(d){
 }
 
 function un_hovered(d){
-    if(zooming){d3.select(this).classed("active", false)} //dont unselect if zoomed. 
+    if(zooming){d3.select(this).classed("active", false)} //dont unselect if zoomed.
 }
 
 function clicked(d) {
-
 
     if (active.node() === this) return reset();
     active.classed("active", false);

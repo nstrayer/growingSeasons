@@ -100,3 +100,11 @@ svg {
 }
 
 p { margin:0 }
+
+#recipe {
+    float:right;
+}
+
+#Back-button {
+    float: left;
+}
