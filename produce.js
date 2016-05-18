@@ -119,14 +119,27 @@ function drawInSeason(data){
         .on("click", function(){
             selected = [] //reset selected ingredients
             d3.select("#results").classed("hidden", true) //hide results again
-            d3.selectAll(".results").remove() //delete all written values. 
+            d3.selectAll(".results").remove() //delete all written values.
             dateSelector() //open date selector.
             svg.select("#background_text") //switch back to just the state text
                 .transition().duration(900)
                 .text(currentState)
             svg.select("#background_rectangle").remove() //remove hidden background rectangle
         })
+        .on("mouseover", buttonHover)
+        .on("mouseout", buttonUnHover)
 
+    d3.selectAll(".buttons")
+        .on("mouseover", buttonHover)
+        .on("mouseout", buttonUnHover)
+
+    function buttonHover(d){
+        d3.select(this).classed("hovered", true)
+    }
+
+    function buttonUnHover(d){
+        d3.select(this).classed("hovered", false)
+    }
     //update header text
     d3.select("#background_text")
         .transition().duration(500)
