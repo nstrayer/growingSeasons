@@ -108,3 +108,17 @@ p { margin:0 }
 #Back-button {
     float: left;
 }
+
+.buttons {
+    border-style: solid;
+    border-width: 2px;
+    border-color: #a6cee3;
+    background-color: #a6cee3;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+.buttons.hovered{
+    border-width: 2px;
+    border-color: black;
+}
