@@ -115,13 +115,13 @@ p { margin:0 }
 .buttons {
     border-style: solid;
     border-width: 2px;
-    border-color: rgba(224, 224, 224, 0);
+    border-color: rgba(78, 78, 78, 0.25);
     background-color: #a6cee3;
     border-radius: 10px;
     text-align: center;
     font-weight: bold;
     cursor: default;
-    padding-top: 0.4em;
+    padding-left: 0.4em;
 }
 .buttons.hovered{
     border-color: black;
