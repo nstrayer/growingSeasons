@@ -125,6 +125,7 @@ function drawInSeason(data){
             dateSelector() //open date selector.
             svg.select("#background_text") //switch back to just the state text
                 .transition().duration(900)
+                .attr("font-size", "4em")
                 .text(currentState)
             svg.select("#background_rectangle").remove() //remove hidden background rectangle
             d3.select(this).classed("hovered", false)
