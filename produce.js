@@ -62,7 +62,7 @@ function drawInSeason(data){
             d3.select("#herb_res")
                 .append("p")
                 .attr("class", "results")
-                .text("No dingus in season.")
+                .text("No herbs in season.")
         }
         d3.select("#herb_res").selectAll(".results")
             .data(herbs).enter()
