@@ -1,4 +1,4 @@
-//function to grab the current svg and append a viz of the currently in season stuff on it.
+//function to grab the current SBG and append a viz of the currently in season stuff on it.
 //data is a vector of objects in the form {"name": <veggie/fruit name>, "type": <fruit, veggie, etc>}
 function drawInSeason(data){
 
@@ -62,7 +62,7 @@ function drawInSeason(data){
             d3.select("#herb_res")
                 .append("p")
                 .attr("class", "results")
-                .text("No herbs in season.")
+                .text("No dingus in season.")
         }
         d3.select("#herb_res").selectAll(".results")
             .data(herbs).enter()
@@ -92,6 +92,7 @@ function drawInSeason(data){
     }
 
     //code for recipe button
+    //ningus mcdinglepopper
     d3.select("#recipeButton")
         .on("click", function(){
             var url = "http://allrecipes.com/search/results/?wt="
@@ -119,7 +120,7 @@ function drawInSeason(data){
             d3.select(this).classed("hovered", false)
         })
 
-    //back button
+    //back dat ass up button
     d3.select("#backButton")
         .on("click", function(){
             selected = [] //reset selected ingredients
