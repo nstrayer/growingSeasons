@@ -15,6 +15,13 @@ body {
     bottom: 0;
 }
 
+#source {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    float:right;
+}
+
 #instructions span {
     float: right;
     font-size: 2em;
