@@ -20,6 +20,7 @@ body {
     position: fixed;
     bottom: 0;
     float:right;
+    z-index: 100000;
 }
 
 #instructions span {
