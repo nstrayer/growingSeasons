@@ -20,7 +20,7 @@ body {
     position: fixed;
     bottom: 0;
     float:right;
-    z-index: 100000;
+    z-index: 100;
 }
 
 #instructions span {
@@ -81,7 +81,7 @@ body {
 
 #results {
   border-style: none;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.7);
   width: 70%;
   margin: 0 auto;
   box-shadow: 10px 10px 5px #888888;
@@ -93,6 +93,7 @@ body {
   top: 5.5em;
   border-radius: 25px;
   padding:20px;
+  z-index: 1000;
 }
 
 .results {
